@@ -1,0 +1,14 @@
+.cabinet {
+  display: flex;
+  height: 100%;
+}
+
+.menu {
+  background-color: #444444;
+  width: 200px;
+  height: 100%;
+
+  li {
+    color: white;
+  }
+}

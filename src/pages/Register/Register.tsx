@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
+import { NotificationManager } from 'react-notifications';
 import * as api from '../../api';
 
 import styles from './Register.module.scss';
@@ -11,25 +11,22 @@ export function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [warning, setWarning] = useState('');
 
   const onRegister = (e: any) => {
     e.preventDefault();
 
     if (password !== repeatPassword) {
-      setWarning('Паролі не співпадають :(');
+      NotificationManager.error('Паролі не співпадають :(', '', 3000);
       return;
     }
 
-    setWarning('');
-
     api.post(`${api.endpoint}/auth/register`, { email, password }, (data: any) => {
       if (data.message) {
-        setWarning(data.message);
+        NotificationManager.error(data.message, '', 3000);
       } else {
-        setWarning('Ви успішно зареєструвались!');
+        NotificationManager.success('Ви успішно зареєструвались!', 'Тепер увійдіть до акаунту', 3000);
       }
-    })
+    });
   };
 
   return (
@@ -60,12 +57,6 @@ export function Register() {
             value={repeatPassword}
             onChange={(e) => setRepeatPassword(e.target.value)}
           />
-        </Form.Group>
-
-        {warning && <Alert variant='danger'>{warning}</Alert>}
-
-        <Form.Group className="mb-3">
-          <Form.Check type="checkbox" label="Не виходити" />
         </Form.Group>
 
         <Form.Group className="mb-3">
