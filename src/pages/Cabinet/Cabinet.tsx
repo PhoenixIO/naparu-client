@@ -7,6 +7,7 @@ import { Exams } from './Exams/Exams';
 
 import styles from './Cabinet.module.scss';
 import { logout } from '../../redux/account/slice';
+import { CreateTemplate } from './CreateTemplate/CreateTemplate';
 
 export function Cabinet() {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ export function Cabinet() {
 
       <div className={styles.content}>
         {page === CabinetPages.ExamTemplates && <ExamTemplates />}
+        {page === CabinetPages.CreateTemplate && <CreateTemplate />}
         {page === CabinetPages.Exams && <Exams />}
       </div>
     </div>

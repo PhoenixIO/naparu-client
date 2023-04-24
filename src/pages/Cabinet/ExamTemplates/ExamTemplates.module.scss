@@ -1,0 +1,16 @@
+.examTemplates {
+  display: flex;
+  flex-direction: column;
+
+  .description {
+    color: white;
+  }
+  
+  .createTemplateButton {
+    margin: 10px;
+  }
+}
+
+.templatesTable {
+  text-align: center;
+}
