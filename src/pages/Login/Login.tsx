@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom';
-import { NotificationManager } from 'react-notifications';
+import { toast } from 'react-toastify';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import * as api from '../../api';
@@ -21,19 +21,20 @@ export function Login() {
     api.post(`${api.endpoint}/auth/login`, { email, password }, (data: any) => {
       const { user } = data;
       if (user) {
-        NotificationManager.success('Ви ввійшли до акаунту!', '', 3000);
+        toast('Ви ввійшли до акаунту!', { type: 'success' });
         dispatch(setAccount(user));
         navigate('/cabinet');
       } else {
-        NotificationManager.error(data.message, '', 3000);
+        toast(data.message, { type: 'error' });
       }
     });
   };
 
   return (
     <div className={styles.login}>
-      <div className={styles.title}>Вхід</div>
       <Form className={styles.form}>
+        <div className={styles.title}>Вхід</div>
+
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Ваш E-mail</Form.Label>
           <Form.Control
@@ -56,12 +57,12 @@ export function Login() {
         <Form.Group className="mb-3" controlId="formBasicCheckbox">
           <Form.Check type="checkbox" label="Не виходити" />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicCheckbox">
+        <Form.Group className="mb-3 d-flex justify-content-center align-items-center" controlId="formBasicCheckbox">
           <Button variant="primary" type="submit" className={styles.submit} onClick={onLogin}>
             Ввійти
           </Button>
           <Link to="/register">
-            Немає аккаунту? Зареєструватись
+            Зареєструватись
           </Link>
         </Form.Group>
       </Form>

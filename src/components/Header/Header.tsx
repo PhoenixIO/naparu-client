@@ -10,7 +10,8 @@ interface HeaderProps {
 export function Header({ authorized }: HeaderProps) {
   return (
     <header className={styles.header}>
-      <div>
+      <div className={styles.logo}>
+        <div className={styles.animation} />
         <Link to="/" className={styles.title}>NaParu</Link>
       </div>
       <div>

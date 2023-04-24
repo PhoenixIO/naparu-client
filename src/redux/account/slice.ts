@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AccountState } from './types';
+import * as api from '../../api';
 
 const initialState: AccountState = {
   email: '',
@@ -10,7 +11,7 @@ const accountSlice = createSlice({
   name: 'account',
   initialState: initialState,
   reducers: {
-    clearAccount: (state, action: PayloadAction) => {
+    clearAccount: (state) => {
       state.email = '';
       state.roles = [];
       window.localStorage.clear();
@@ -19,9 +20,14 @@ const accountSlice = createSlice({
       state.email = action.payload.email;
       state.roles = action.payload.roles;
     },
+    logout: () => {
+      api.post(`${api.endpoint}/auth/logout`, {});
+      accountSlice.actions.clearAccount();
+      window.location.reload();
+    },
   },
 })
 
-export const { setAccount, clearAccount } = accountSlice.actions;
+export const { setAccount, clearAccount, logout } = accountSlice.actions;
 
 export default accountSlice.reducer;

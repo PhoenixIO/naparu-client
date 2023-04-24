@@ -1,4 +1,5 @@
-import { ReactNode, useEffect } from 'react';
+import clsx from 'clsx';
+import { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Header } from '../Header/Header';
 import { clearAccount, setAccount } from '../../redux/account/slice'
@@ -9,11 +10,13 @@ import styles from './Layout.module.scss';
 
 interface LayoutProps {
   children: ReactNode;
+  authGuard?: boolean;
 }
 
-export function Layout({ children }: LayoutProps) {
+export function Layout({ children, authGuard = false }: LayoutProps) {
   const dispatch = useDispatch();
   const authorized = useSelector(selectEmail) !== '';
+  const [authRequested, setAuthRequested] = useState(false);
   
   useEffect(() => api.get(`${api.endpoint}/user/account`, (data) => {
     if (data.email) {
@@ -21,13 +24,17 @@ export function Layout({ children }: LayoutProps) {
     } else {
       dispatch(clearAccount());
     }
-  }), [])
+    setAuthRequested(true);
+  }), []);
 
   return (
     <div className={styles.layout}>
       <Header authorized={authorized} />
       <div className={styles.children}>
-        {children}
+        {authGuard && (!authRequested || !authorized) && (
+          <span className={clsx(styles.loader, !authorized && styles.notAuthorized)}></span>
+        )}
+        {(!authGuard || authorized) && children}
       </div>
     </div>
   );
