@@ -1,41 +1,33 @@
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import Table from 'react-bootstrap/Table';
 import { setCabinetPage } from '../../../redux/pages/slice';
 import { CabinetPages } from '../../../redux/pages/types';
+import { setEditingTemplate } from '../../../redux/templates/slice';
+import * as api from '../../../api';
 
 import styles from './ExamTemplates.module.scss';
 
 export function ExamTemplates() {
   const dispatch = useDispatch();
-  const templates = [
-    {
-      _id: 'asdasdadsa',
-      title: 'Системи вимірювання одиниць',
-      time: 30,
-      createdAt: new Date(),
-      questions: [
-        {
-          type: 'checkbox',
-          question: 'чи є відповідь?',
-          answers: [
-            {
-              text: 'так',
-              correct: true,
-            },
-            {
-              text: 'ні',
-              correct: false,
-            }
-          ],
-        },
-      ],
-    },
-  ];
+  const [templates, setTemplates] = useState<any>([]);
+
+  useEffect(() => {
+    api.get(`${api.endpoint}/templates`, (data: any) => {
+      if (data.message) {
+        toast(data.message, { type: 'error' });
+      } else {
+        setTemplates(data);
+      }
+    });
+  }, []);
 
   const onEditTemplate = (template: any) => {
-    console.log('edit template');
+    dispatch(setEditingTemplate(template));
+    dispatch(setCabinetPage(CabinetPages.CreateTemplate));
   }
   const onTemplateCreate = () => {
     dispatch(setCabinetPage(CabinetPages.CreateTemplate))
@@ -61,7 +53,7 @@ export function ExamTemplates() {
         </thead>
 
         <tbody>
-          {templates.map((template, i) => {
+          {templates.map((template: any, i: number) => {
             const onClick = () => onEditTemplate(template);
             return <TemplateHeading key={template._id} index={i} template={template} onClick={onClick} />
           })}

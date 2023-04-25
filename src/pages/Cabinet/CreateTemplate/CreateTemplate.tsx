@@ -1,15 +1,24 @@
 import clsx from 'clsx';
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faClose } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
+import { selectEditingTemplate } from '../../../redux/templates/selector';
+import { clearTemplates } from '../../../redux/templates/slice';
+import * as api from '../../../api';
 
 import styles from './CreateTemplate.module.scss';
 
 export function CreateTemplate() {
-  const [title, setTitle] = useState('');
-  const [questions, setQuestions] = useState<any>([]);
+  const dispatch = useDispatch();
+  const editTemplate = useSelector(selectEditingTemplate);
+  const [title, setTitle] = useState(editTemplate ? editTemplate.title : '');
+  // Deep clone object, because Redux state is read-only.
+  const [questions, setQuestions] = useState<any>
+    (editTemplate ? JSON.parse(JSON.stringify(editTemplate.questions)) : []);
 
   const addQuestion = () => {
     setQuestions([...questions, {
@@ -31,7 +40,15 @@ export function CreateTemplate() {
       questions,
     };
 
-    console.log(template);
+    const endpoint = api.endpoint + (editTemplate ? `/templates/edit/${editTemplate._id}` : '/templates/create');
+    api.post(endpoint, template, (data) => {
+      if (data.message) {
+        toast(data.message, { type: 'error' });
+      } else {
+        toast('Шаблон успішно збережено!', { type: 'success' });
+        dispatch(clearTemplates());
+      }
+    });
   }
 
   return (
@@ -109,9 +126,11 @@ function TemplateQuestion({ question, index, updateQuestion }: TemplateQuestionP
 
         <Table className={styles.answersTable} variant="dark" striped bordered>
           <thead className='text-center'>
-            <td>#</td>
-            <td>Відповідь правильна?</td>
-            <td></td>
+            <tr>
+              <td>#</td>
+              <td>Відповідь правильна?</td>
+              <td></td>
+            </tr>
           </thead>
           <tbody>
             {question.answers.map((answer: any, i: number) => {
