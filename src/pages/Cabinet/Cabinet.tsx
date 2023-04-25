@@ -3,11 +3,12 @@ import { selectCabinetPage } from '../../redux/pages/selector';
 import { setCabinetPage } from '../../redux/pages/slice';
 import { CabinetPages } from '../../redux/pages/types';
 import { ExamTemplates } from './ExamTemplates/ExamTemplates';
+import { CreateTemplate } from './CreateTemplate/CreateTemplate';
+import { CreateExam } from './CreateExam/CreateExam';
 import { Exams } from './Exams/Exams';
 
 import styles from './Cabinet.module.scss';
 import { logout } from '../../redux/account/slice';
-import { CreateTemplate } from './CreateTemplate/CreateTemplate';
 
 export function Cabinet() {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ export function Cabinet() {
         {page === CabinetPages.ExamTemplates && <ExamTemplates />}
         {page === CabinetPages.CreateTemplate && <CreateTemplate />}
         {page === CabinetPages.Exams && <Exams />}
+        {page === CabinetPages.CreateExam && <CreateExam />}
       </div>
     </div>
   )

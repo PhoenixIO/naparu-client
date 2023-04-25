@@ -4,6 +4,9 @@ import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import Table from 'react-bootstrap/Table';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+
 import { setCabinetPage } from '../../../redux/pages/slice';
 import { CabinetPages } from '../../../redux/pages/types';
 import { setEditingTemplate } from '../../../redux/templates/slice';
@@ -25,12 +28,25 @@ export function ExamTemplates() {
     });
   }, []);
 
-  const onEditTemplate = (template: any) => {
+  const onTemplateEdit = (template: any) => {
     dispatch(setEditingTemplate(template));
     dispatch(setCabinetPage(CabinetPages.CreateTemplate));
   }
   const onTemplateCreate = () => {
     dispatch(setCabinetPage(CabinetPages.CreateTemplate))
+  }
+  const onTemplateDelete = (template: any, index: number) => {
+    if (window.confirm(`Ви впевнені що хочете видалити прекрасний шаблон "${template.title}"?`)) {
+      api.post(`${api.endpoint}/templates/delete/${template._id}`, {}, (data) => {
+        if (data.message) {
+          toast(data.message, { type: 'error' });
+        } else {
+          templates.splice(index, 1);
+          setTemplates(templates);
+          toast('Шаблон видалено', { type: 'success' });
+        }
+      });
+    }
   }
 
   return (
@@ -49,32 +65,28 @@ export function ExamTemplates() {
             <th>Назва</th>
             <th>Кількість запитань</th>
             <th>Дата створення</th>
+            <th></th>
           </tr>
         </thead>
 
         <tbody>
           {templates.map((template: any, i: number) => {
-            const onClick = () => onEditTemplate(template);
-            return <TemplateHeading key={template._id} index={i} template={template} onClick={onClick} />
+            const onClick = () => onTemplateEdit(template);
+            const onDelete = () => onTemplateDelete(template, i);
+            return (
+              <tr key={template._id}>
+                <td>{i + 1}</td>
+                <td onClick={onClick} role="button">{template.title}</td>
+                <td>{template.questions.length}</td>
+                <td>{new Date(template.createdAt).toLocaleDateString()}</td>
+                <td onClick={onDelete} role="button">
+                  <FontAwesomeIcon icon={faTrash} />
+                </td>
+              </tr>
+            );
           })}
         </tbody>
       </Table>
     </div>
-  );
-}
-
-interface TemplateHeadingProps {
-  template: any;
-  index: number;
-  onClick: any;
-}
-function TemplateHeading({ template, index, onClick }: TemplateHeadingProps) {
-  return (
-    <tr role="button" onClick={onClick}>
-      <td>{index + 1}</td>
-      <td>{template.title}</td>
-      <td>{template.questions.length}</td>
-      <td>{new Date(template.createdAt).toLocaleDateString()}</td>
-    </tr>
   );
 }

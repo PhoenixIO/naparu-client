@@ -1,7 +1,8 @@
 export enum CabinetPages {
   ExamTemplates = 'exam-template',
-  Exams = 'exams',
   CreateTemplate = 'create-template',
+  Exams = 'exams',
+  CreateExam = 'create-exam',
 }
 
 export type PagesSliceState = {

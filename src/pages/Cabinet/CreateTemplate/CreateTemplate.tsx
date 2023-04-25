@@ -11,6 +11,8 @@ import { clearTemplates } from '../../../redux/templates/slice';
 import * as api from '../../../api';
 
 import styles from './CreateTemplate.module.scss';
+import { setCabinetPage } from '../../../redux/pages/slice';
+import { CabinetPages } from '../../../redux/pages/types';
 
 export function CreateTemplate() {
   const dispatch = useDispatch();
@@ -47,6 +49,7 @@ export function CreateTemplate() {
       } else {
         toast('Шаблон успішно збережено!', { type: 'success' });
         dispatch(clearTemplates());
+        dispatch(setCabinetPage(CabinetPages.ExamTemplates));
       }
     });
   }
