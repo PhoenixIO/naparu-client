@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -33,6 +34,17 @@ export function Exams() {
   const onExamView = (exam: any) => {
   }
   const onExamDelete = (exam: any, index: number) => {
+    if (window.confirm(`Ви впевнені що хочете видалити це тестування?`)) {
+      api.post(`${api.endpoint}/exams/delete/${exam._id}`, {}, (data) => {
+        if (data.message) {
+          toast(data.message, { type: 'error' });
+        } else {
+          exams.splice(index, 1);
+          setExams([...exams]);
+          toast('Тестування видалено', { type: 'success' });
+        }
+      });
+    }
   }
 
   return (
@@ -44,13 +56,14 @@ export function Exams() {
         Створити тестування на основі шаблону
       </Button>
 
-      <Table className={styles.examsTable} variant="dark" striped bordered hover>
+      <Table className={clsx(styles.examsTable, 'text-center align-middle')} variant="dark" striped bordered hover>
         <thead>
           <tr>
             <th>#</th>
             <th>Назва</th>
             <th>Пройшло учнів</th>
             <th>Дата створення</th>
+            <th>Посилання</th>
             <th></th>
           </tr>
         </thead>
@@ -59,12 +72,16 @@ export function Exams() {
           {exams.map((exam: any, i: number) => {
             const onClick = () => onExamView(exam);
             const onDelete = () => onExamDelete(exam, i);
+            const link = window.location.origin + '/exams/' + exam._id;
             return (
               <tr key={exam._id}>
                 <td>{i + 1}</td>
-                <td onClick={onClick} role="button">{exam.title}</td>
-                <td>{exam.students.length}</td>
+                <td onClick={onClick} role="button">Нема</td>
+                <td>{exam.users.length}</td>
                 <td>{new Date(exam.createdAt).toLocaleDateString()}</td>
+                <td>
+                  <a href={link} target="_blank">Перейти</a>
+                </td>
                 <td onClick={onDelete} role="button">
                   <FontAwesomeIcon icon={faTrash} />
                 </td>

@@ -42,7 +42,7 @@ export function ExamTemplates() {
           toast(data.message, { type: 'error' });
         } else {
           templates.splice(index, 1);
-          setTemplates(templates);
+          setTemplates([...templates]);
           toast('Шаблон видалено', { type: 'success' });
         }
       });
