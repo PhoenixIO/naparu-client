@@ -10,20 +10,34 @@ import { Exams } from './Exams/Exams';
 import styles from './Cabinet.module.scss';
 import { logout } from '../../redux/account/slice';
 
+const pages = {
+  [CabinetPages.ExamTemplates]: 'Список шаблонів',
+  [CabinetPages.Exams]: 'Список тестувань',
+};
+
 export function Cabinet() {
   const dispatch = useDispatch();
   const page = useSelector(selectCabinetPage);
 
   const onLogout = () => {
     dispatch(logout())
-  }
+  };
 
   return (
     <div className={styles.cabinet}>
       <div className={styles.menu}>
         <ul>
-          <li onClick={() => dispatch(setCabinetPage(CabinetPages.ExamTemplates))}>Список шаблонів</li>
-          <li onClick={() => dispatch(setCabinetPage(CabinetPages.Exams))}>Список тестувань</li>
+          {Object.entries(pages).map(([pageId, name]) => {
+            return (
+              <li
+                key={pageId}
+                className={`${pageId === page ? styles.active : ''}`}
+                onClick={() => dispatch(setCabinetPage(pageId as CabinetPages))}
+              >
+                {name}
+              </li>
+            );
+          })}
           <li className={styles.logout} onClick={onLogout}>Вийти з акаунту</li>
         </ul>
       </div>

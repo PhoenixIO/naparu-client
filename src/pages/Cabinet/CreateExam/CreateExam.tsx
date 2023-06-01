@@ -36,8 +36,8 @@ export function CreateExam() {
 
   return (
     <div className={styles.createExam}>
-      <select onChange={(e: any) => setTemplate(e.target.value)}>
-        <option disabled selected>Вибрати шаблон</option>
+      <select onChange={(e: any) => setTemplate(e.target.value)} defaultValue='Вибрати шаблон'>
+        <option disabled>Вибрати шаблон</option>
         {templates.length === 0 && <option disabled>Немає створених шаблонів</option>}
         {templates.map((template: any) => {
           return (

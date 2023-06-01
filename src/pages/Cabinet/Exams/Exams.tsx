@@ -72,7 +72,7 @@ export function Exams() {
           {exams.map((exam: any, i: number) => {
             const onClick = () => onExamView(exam);
             const onDelete = () => onExamDelete(exam, i);
-            const link = window.location.origin + '/exams/' + exam._id;
+            const link = window.location.origin + '/exam/' + exam._id;
             return (
               <tr key={exam._id}>
                 <td>{i + 1}</td>

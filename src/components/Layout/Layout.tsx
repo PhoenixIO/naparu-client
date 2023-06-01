@@ -7,6 +7,7 @@ import { selectEmail } from '../../redux/account/selector';
 import * as api from '../../api';
 
 import styles from './Layout.module.scss';
+import { Loader } from '../Loaders/Loader';
 
 interface LayoutProps {
   children: ReactNode;
@@ -32,7 +33,7 @@ export function Layout({ children, authGuard = false }: LayoutProps) {
       <Header authorized={authorized} />
       <div className={styles.children}>
         {authGuard && (!authRequested || !authorized) && (
-          <span className={clsx(styles.loader, !authorized && styles.notAuthorized)}></span>
+          <Loader className={!authorized ? styles.notAuthorized : ''} />
         )}
         {(!authGuard || authorized) && children}
       </div>
