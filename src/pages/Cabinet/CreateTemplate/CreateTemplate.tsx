@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import TextareaAutosize from 'react-textarea-autosize';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
@@ -16,6 +17,7 @@ import * as api from '../../../api';
 
 import styles from './CreateTemplate.module.scss';
 import inputStyles from '../../../components/Inputs/InputText.module.scss';
+import { SpinnerLoader } from '../../../components/Loaders/Spinner';
 
 export function CreateTemplate() {
   const dispatch = useDispatch();
@@ -105,50 +107,10 @@ export function CreateTemplate() {
 
 function TemplateQuestion({ question, index, updateQuestion, openEdit }: any) {
   return (
-    <tr className={clsx(styles.question, 'align-middle text-center')} onClick={openEdit} role='button'>
+    <tr className={clsx(styles.question, 'align-middle text-center')} role='button'>
       <td>{index + 1}</td>
-      <td>{question.title}</td>
+      <td onClick={openEdit}>{question.title}</td>
       <td role="button" onClick={() => updateQuestion(null, index)}>
-        <FontAwesomeIcon icon={faTrash} />
-      </td>
-    </tr>
-  );
-}
-
-function TemplateAnswer({ answer, index, updateAnswer }: any) {
-  return (
-    <tr className={clsx(styles.answer, 'align-middle text-center')}>
-      <td>{index + 1}</td>
-      <td>
-        <input type="checkbox" checked={answer.correct} onChange={(e) => {
-          answer.correct = e.target.checked;
-          updateAnswer(answer);
-        }} />
-
-        <div className={inputStyles.inputGroup}>
-          <input type="text" className={inputStyles.input} placeholder="Відповідь"
-            value={answer.text}
-            onChange={(e) => {
-              answer.text = e.target.value;
-              updateAnswer(answer);
-            }}
-          />
-          <label className={inputStyles.inputLabel}>Відповідь</label>
-        </div>
-
-        <div className={inputStyles.inputGroup}>
-          <input type="text" className={inputStyles.input} placeholder="Пояснення"
-            value={answer.description}
-            onChange={(e) => {
-              answer.description = e.target.value;
-              updateAnswer(answer);
-            }}
-          />
-          <label className={inputStyles.inputLabel}>Пояснення</label>
-        </div>
-      </td>
-
-      <td role="button" onClick={() => updateAnswer(null)}>
         <FontAwesomeIcon icon={faTrash} />
       </td>
     </tr>
@@ -178,34 +140,82 @@ function EditQuestionModal({ question, updateQuestion, close }: any) {
         <label className={inputStyles.inputLabel}>Запитання</label>
       </div>
 
-      <Table className={styles.answersTable} variant="dark" striped bordered>
-        <thead className='text-center'>
-          <tr>
-            <td>#</td>
-            <td>Відповідь правильна?</td>
-            <td></td>
-          </tr>
-        </thead>
-        <tbody>
-          {question.answers.map((answer: any, i: number) => {
-            const updateAnswer = (answer: any) => {
-              if (!answer) {
-                question.answers.splice(i, 1);
-              } else {
-                question.answers[i] = answer;
-              }
-              updateQuestion(question);
+      <div className={styles.answersList}>
+        {question.answers.map((answer: any, i: number) => {
+          const updateAnswer = (answer: any) => {
+            if (!answer) {
+              question.answers.splice(i, 1);
+            } else {
+              question.answers[i] = answer;
             }
-            return <TemplateAnswer key={i} index={i}
-              answer={answer}
-              updateAnswer={updateAnswer}
-            />;
-          })}
-        </tbody>
-      </Table>
+            updateQuestion(question);
+          }
+          return <TemplateAnswer key={i} index={i}
+            question={question}
+            answer={answer}
+            updateAnswer={updateAnswer}
+          />;
+        })}
+      </div>
+
       <Button variant="dark" onClick={addAnswer}>Додати відповідь</Button>
       <Line />
       <Button onClick={close} className={styles.save}>Зберегти</Button>
     </Modal>
+  );
+}
+
+
+function TemplateAnswer({ question, answer, index, updateAnswer }: any) {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const generateDescription = () => {
+    setIsGenerating(true);
+
+    api.post(`${api.endpoint}/openai/generate/description`, {
+      question: question.title,
+      answer: answer.text,
+    }, (data) => {
+      console.log(data);
+      setIsGenerating(false);
+      answer.description = data.result;
+      updateAnswer(answer);
+    });
+  }
+
+  return (
+    <div className={styles.answer}>
+      <div style={{ flex: '1 1 0' }}>
+        <div className={styles.textarea}>
+          <label className={styles.textareaLabel}>
+            Відповідь {String.fromCharCode(65 + index)} (правильна?
+            <input type='checkbox' className={styles.checkbox} checked={answer.correct} onChange={(e) => {
+              answer.correct = e.target.checked;
+              updateAnswer(answer);
+            }} />)
+          </label>
+          <TextareaAutosize value={answer.text} onChange={(e) => {
+            answer.text = e.target.value;
+            updateAnswer(answer);
+          }} />
+        </div>
+
+        <div className={styles.textarea} style={{ marginTop: 15 }}>
+          <label className={styles.textareaLabel}>Пояснення</label>
+          <div className={styles.description}>
+            <TextareaAutosize value={answer.description} spellCheck="false" onChange={(e) => {
+              answer.description = e.target.value;
+              updateAnswer(answer);
+            }} />
+            <Button className={styles.generate} onClick={generateDescription} variant='success'>
+              {isGenerating ? <SpinnerLoader /> : 'Генерувати'}
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div role="button" className={styles.delete} onClick={() => updateAnswer(null)}>
+        <FontAwesomeIcon icon={faTrash} />
+      </div>
+    </div>
   );
 }

@@ -1,6 +1,12 @@
 .exams {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 70%;
+
+  .alert {
+    max-width: 400px;
+  }
 
   .createExamButton {
     margin: 10px;

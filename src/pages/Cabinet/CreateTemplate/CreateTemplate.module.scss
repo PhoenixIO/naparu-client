@@ -35,8 +35,63 @@
     overflow-y: auto;
     overflow-x: hidden;
 
-    .inputGroup, .inputGroup input {
+    .answersList {
+      display: flex;
+      flex-direction: column;
       width: 100%;
+
+      .answer {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        margin: 10px 0;
+        background-color: #212529;
+        border: 1px solid #161719;
+        border-radius: 5px;
+
+        .textarea {
+          margin-top: 5px;
+          display: flex;
+          flex-direction: column;
+          
+          textarea {
+            background-color: #303539;
+            color: #dddddd;
+            border: none;
+          }
+
+          label {
+            text-align: center;
+          }
+        }
+    
+        .checkbox {
+          margin: 0 5px;
+        }
+    
+        .description {
+          display: flex;
+    
+          .generate {
+            display: flex;
+            align-items: center;
+            border-radius: 0 5px 5px 0;
+            width: 110px;
+          }
+          textarea {
+            width: 100%;
+            min-height: 40px;
+          }
+        }
+
+        .delete {
+          color: #ff6565;
+          font-size: 22px;
+          margin-left: 10px;
+          width: 55px;
+          text-align: center;
+        }
+      }
     }
 
     &::-webkit-scrollbar {

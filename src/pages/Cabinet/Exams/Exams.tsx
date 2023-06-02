@@ -49,8 +49,8 @@ export function Exams() {
 
   return (
     <div className={styles.exams}>
-      <Alert variant='dark'>
-        Тут ви можете переглянути усі створені тестування. На основі цих шаблонів створюються тестування.
+      <Alert variant='dark' className={styles.alert}>
+        Тут ви можете переглянути усі створені тестування.
       </Alert>
       <Button className={styles.createExamButton} onClick={onExamCreate}>
         Створити тестування на основі шаблону
@@ -76,7 +76,7 @@ export function Exams() {
             return (
               <tr key={exam._id}>
                 <td>{i + 1}</td>
-                <td onClick={onClick} role="button">Нема</td>
+                <td onClick={onClick} role="button"></td>
                 <td>{exam.users.length}</td>
                 <td>{new Date(exam.createdAt).toLocaleDateString()}</td>
                 <td>

@@ -11,8 +11,8 @@ import styles from './Cabinet.module.scss';
 import { logout } from '../../redux/account/slice';
 
 const pages = {
-  [CabinetPages.ExamTemplates]: 'Список шаблонів',
-  [CabinetPages.Exams]: 'Список тестувань',
+  'Список шаблонів': [CabinetPages.ExamTemplates, CabinetPages.CreateTemplate],
+  'Список тестувань': [CabinetPages.Exams, CabinetPages.CreateExam],
 };
 
 export function Cabinet() {
@@ -27,11 +27,12 @@ export function Cabinet() {
     <div className={styles.cabinet}>
       <div className={styles.menu}>
         <ul>
-          {Object.entries(pages).map(([pageId, name]) => {
+          {Object.entries(pages).map(([name, pages]) => {
+            const pageId = pages[0];
             return (
               <li
                 key={pageId}
-                className={`${pageId === page ? styles.active : ''}`}
+                className={`${pages.includes(page) ? styles.active : ''}`}
                 onClick={() => dispatch(setCabinetPage(pageId as CabinetPages))}
               >
                 {name}
