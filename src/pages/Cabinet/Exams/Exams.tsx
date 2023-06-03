@@ -83,7 +83,7 @@ export function Exams() {
                   {date.toLocaleDateString()} {date.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' })}
                 </td>
                 <td>
-                  <a href={link} target="_blank">Перейти</a>
+                  <a href={link} target="_blank" rel="noreferrer">Перейти</a>
                 </td>
                 <td onClick={onDelete} role="button">
                   <FontAwesomeIcon icon={faTrash} />
