@@ -51,7 +51,7 @@ export function ExamTemplates() {
 
   return (
     <div className={styles.examTemplates}>
-      <Alert variant='dark'>
+      <Alert variant='dark' className={styles.alert}>
         Тут ви можете переглянути усі створені шаблони. На основі цих шаблонів створюються тестування.
       </Alert>
       <Button className={styles.createTemplateButton} onClick={onTemplateCreate}>

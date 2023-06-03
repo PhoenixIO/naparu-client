@@ -5,7 +5,7 @@ import { Login } from './pages/Login/Login';
 import { Register } from './pages/Register/Register';
 import { Cabinet } from './pages/Cabinet/Cabinet';
 import { Layout } from './components/Layout/Layout';
-import { Exam } from './pages/Exam/Exam';
+import { ExamPage } from './pages/Exam/Exam';
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         <Route path="/login" element={<Layout> <Login /> </Layout>} />
         <Route path="/register" element={<Layout> <Register /> </Layout>} />
         <Route path="/cabinet" element={<Layout authGuard> <Cabinet /> </Layout>} />
-        <Route path="/exam/:id" element={<Layout> <Exam /> </Layout>} />
+        <Route path="/exam/:id" element={<Layout> <ExamPage /> </Layout>} />
       </Routes>
     </BrowserRouter>
   );

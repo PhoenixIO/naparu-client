@@ -175,10 +175,13 @@ function TemplateAnswer({ question, answer, index, updateAnswer }: any) {
       question: question.title,
       answer: answer.text,
     }, (data) => {
-      console.log(data);
+      if (data.message) {
+        toast(data.message, { type: 'error' });
+      } else {
+        answer.description = data.result;
+        updateAnswer(answer);
+      }
       setIsGenerating(false);
-      answer.description = data.result;
-      updateAnswer(answer);
     });
   }
 

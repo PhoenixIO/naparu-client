@@ -1,11 +1,14 @@
 .examTemplates {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
 
-  .description {
-    color: white;
+  .alert, .createTemplateButton {
+    max-width: 400px;
   }
-  
+
   .createTemplateButton {
     margin: 10px;
   }

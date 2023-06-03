@@ -2,9 +2,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 70%;
+  width: 100%;
+  max-width: 900px;
 
-  .alert {
+  .alert, .createExamButton {
     max-width: 400px;
   }
 

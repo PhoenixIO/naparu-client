@@ -45,7 +45,7 @@ export function Exams() {
         }
       });
     }
-  }
+  };
 
   return (
     <div className={styles.exams}>
@@ -69,16 +69,19 @@ export function Exams() {
         </thead>
 
         <tbody>
-          {exams.map((exam: any, i: number) => {
+          {exams.map(({ exam, template }: any, i: number) => {
             const onClick = () => onExamView(exam);
             const onDelete = () => onExamDelete(exam, i);
             const link = window.location.origin + '/exam/' + exam._id;
+            const date = new Date(exam.createdAt);
             return (
               <tr key={exam._id}>
                 <td>{i + 1}</td>
-                <td onClick={onClick} role="button"></td>
+                <td onClick={onClick} role="button">{template.title}</td>
                 <td>{exam.users.length}</td>
-                <td>{new Date(exam.createdAt).toLocaleDateString()}</td>
+                <td>
+                  {date.toLocaleDateString()} {date.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' })}
+                </td>
                 <td>
                   <a href={link} target="_blank">Перейти</a>
                 </td>
