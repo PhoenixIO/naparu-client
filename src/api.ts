@@ -1,4 +1,5 @@
-export const endpoint = `${window.location.protocol}//${process.env.REACT_APP_BACKEND_ENDPOINT}`;
+export const protocol = 'http:'; // window.location.protocol
+export const endpoint = `${protocol}//${process.env.REACT_APP_BACKEND_ENDPOINT}`;
 export const fileHost = `${endpoint}/files/`;
 
 const message = 'Сервер відповів помилкою, ми працюємо над цим :('
